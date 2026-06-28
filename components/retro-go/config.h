@@ -1,172 +1,45 @@
-#if defined(RG_TARGET_BRUTZELBOY)
-#include "targets/brutzelboy/config.h"
-#elif defined(RG_TARGET_ODROID_GO)
-#include "targets/odroid-go/config.h"
-#elif defined(RG_TARGET_MRGC_G32)
-#include "targets/mrgc-g32/config.h"
-#elif defined(RG_TARGET_RETRO_ESP32)
-#include "targets/retro-esp32/config.h"
-#elif defined(RG_TARGET_RETRO_RULER_V1)
-#include "targets/retro-ruler-V1/config.h"
-#elif defined(RG_TARGET_SDL2)
-#include "targets/sdl2/config.h"
-#elif defined(RG_TARGET_MRGC_GBM)
-#include "targets/mrgc-gbm/config.h"
-#elif defined(RG_TARGET_ESPLAY_MICRO)
-#include "targets/esplay-micro/config.h"
-#elif defined(RG_TARGET_ESP32_S3_DEVKIT)
-#include "targets/esp32-s3-devkit/config.h"
-#elif defined(RG_TARGET_FRI3D_2024)
-#include "targets/fri3d-2024/config.h"
-#elif defined(RG_TARGET_BYTEBOI_REV1)
-#include "targets/byteboi-rev1/config.h"
-#elif defined(RG_TARGET_RACHEL_ESP32)
-#include "targets/rachel-esp32/config.h"
-#elif defined(RG_TARGET_NULLNANO)
-#include "targets/nullnano/config.h"
-#elif defined(RG_TARGET_T_DECK_PLUS)
-#include "targets/t-deck-plus/config.h"
-#elif defined(RG_TARGET_VMU)
-#include "targets/vmu/config.h"
-#elif defined(RG_TARGET_CROKPOCKET)
-#include "targets/crokpocket/config.h"
-#elif defined(RG_TARGET_REDROID_GO)
-#include "targets/redroid-go/config.h"
-#else
-#warning "No target defined. Defaulting to ODROID-GO."
-#include "targets/odroid-go/config.h"
-#define RG_TARGET_ODROID_GO
-#endif
+#pragma once
 
-#ifndef RG_PROJECT_NAME
-#define RG_PROJECT_NAME "Retro-Go"
-#endif
+#define CONFIG_IDF_TARGET_ESP32S3 1
 
-#ifndef RG_PROJECT_WEBSITE
-#define RG_PROJECT_WEBSITE "https://github.com/ducalex/retro-go"
-#endif
+// 📺 1. หน้าจอ ILI9341 / ST7789 (ปรับลดสปีดลงเหลือ 20MHz เพื่อแก้ปัญหาจอขาวโดยเฉพาะ)
+#define CONFIG_HW_LCD_TYPE_ILI9341      1
+#define CONFIG_HW_LCD_WIDTH             320
+#define CONFIG_HW_LCD_HEIGHT            240
+#define CONFIG_HW_LCD_SPEED_MHZ         20   // <--- ล็อกสปีดต่ำเพื่อความเสถียรของสายสัญญาณ
+#define CONFIG_HW_LCD_CLK               12
+#define CONFIG_HW_LCD_MOSI              11
+#define CONFIG_HW_LCD_MISO              -1  
+#define CONFIG_HW_LCD_CS                10
+#define CONFIG_HW_LCD_DC                13
+#define CONFIG_HW_LCD_RESET             14
+#define CONFIG_HW_LCD_BL                -1  
 
-#ifndef RG_PROJECT_CREDITS
-#define RG_PROJECT_CREDITS \
-    "Retro-Go: ducalex\n"
-    // TODO: Decide which additional credits should be included here?
-    // Maybe the main author for each emulator? Or should that credit be only when seeing `about` inside said app?
-    // What about libraries and fonts (lodepng, etc)?
-    // What about targets/ports? Should we have a RG_TARGET_AUTHOR to append here?
-#endif
+// 💾 2. SD Card ภายนอก (แยกพินบัสต่ำปลอดภัยไร้แรมกวน)
+#define CONFIG_HW_SD_FS_FAT             1
+#define CONFIG_HW_SD_CS                 2
+#define CONFIG_HW_SD_MOSI               3
+#define CONFIG_HW_SD_MISO               8
+#define CONFIG_HW_SD_CLK                9
 
-#ifndef RG_PROJECT_APP
-#define RG_PROJECT_APP "unknown"
-#endif
+// 🔊 3. เสียง I2S MAX98357A
+#define CONFIG_HW_AUDIO_I2S             1
+#define CONFIG_HW_AUDIO_I2S_INTERNAL    0  
+#define CONFIG_HW_AUDIO_I2S_DAC_MAX98357A 1
+#define CONFIG_HW_I2S_BCLK              41
+#define CONFIG_HW_I2S_LRCK              40
+#define CONFIG_HW_I2S_DATA              42
 
-#ifndef RG_PROJECT_VER
-#define RG_PROJECT_VER "unknown"
-#endif
+// 🕹️ 4. ปุ่มกดควบคุม 8 ปุ่ม (Active Low)
+#define CONFIG_HW_BUTTON_GPIO           1
+#define CONFIG_HW_BTN_UP                4   
+#define CONFIG_HW_BTN_DOWN              5  
+#define CONFIG_HW_BTN_LEFT              6
+#define CONFIG_HW_BTN_RIGHT             7
+#define CONFIG_HW_BTN_A                 15  
+#define CONFIG_HW_BTN_B                 16
+#define CONFIG_HW_BTN_SELECT            17
+#define CONFIG_HW_BTN_START             18
 
-#ifndef RG_BUILD_INFO
-#define RG_BUILD_INFO "(none)"
-#endif
-
-#ifndef RG_BUILD_TIME
-// 2020-01-31 00:00:00, first retro-go commit :)
-#define RG_BUILD_TIME 1580446800
-#endif
-
-#ifndef RG_BUILD_DATE
-#define RG_BUILD_DATE __DATE__ " " __TIME__
-#endif
-
-#ifndef RG_APP_LAUNCHER
-#define RG_APP_LAUNCHER "launcher"
-#endif
-
-#ifndef RG_APP_FACTORY
-#define RG_APP_FACTORY NULL
-#endif
-
-#ifndef RG_UPDATER_ENABLE
-#define RG_UPDATER_ENABLE 1
-#endif
-
-// If either of the following isn't defined then the updater will only perform version *checks*, not self-update
-// #define RG_UPDATER_APPLICATION       RG_APP_FACTORY
-// #define RG_UPDATER_DOWNLOAD_LOCATION RG_STORAGE_ROOT "/odroid/firmware"
-
-#ifndef RG_UPDATER_GITHUB_RELEASES
-#define RG_UPDATER_GITHUB_RELEASES "https://api.github.com/repos/ducalex/retro-go/releases?per_page=10"
-#endif
-
-#ifndef RG_PATH_MAX
-#define RG_PATH_MAX 255
-#endif
-
-#ifndef RG_RECOVERY_BTN
-#define RG_RECOVERY_BTN RG_KEY_ANY
-#endif
-
-#ifndef RG_BATTERY_CALC_PERCENT
-#define RG_BATTERY_CALC_PERCENT(raw) (100)
-#endif
-
-#ifndef RG_BATTERY_CALC_VOLTAGE
-#define RG_BATTERY_CALC_VOLTAGE(raw) (0)
-#endif
-
-// These values are to prevent jitter, so that the battery icon doesn't flicker or
-// percent display doesn't oscillate between 77 and 78%, for example
-#ifndef RG_BATTERY_UPDATE_THRESHOLD
-#define RG_BATTERY_UPDATE_THRESHOLD 1.0f
-#endif
-#ifndef RG_BATTERY_UPDATE_THRESHOLD_VOLT
-#define RG_BATTERY_UPDATE_THRESHOLD_VOLT 0.010f
-#endif
-
-// Number of cycles the hardware state must be maintained before the change is reflected in rg_input_read_gamepad.
-// The reaction time is calculated as such: N*10ms +/- 10ms. Different hardware types have different requirements.
-// Valid range is 1-9
-#ifndef RG_GAMEPAD_DEBOUNCE_PRESS
-#define RG_GAMEPAD_DEBOUNCE_PRESS (2)
-#endif
-#ifndef RG_GAMEPAD_DEBOUNCE_RELEASE
-#define RG_GAMEPAD_DEBOUNCE_RELEASE (2)
-#endif
-// Wait for ADC value to be stable before registering it (values of 50 - 250 are typically good)
-#ifndef RG_GAMEPAD_ADC_FILTER_WINDOW
-#define RG_GAMEPAD_ADC_FILTER_WINDOW (150)
-#endif
-
-#ifndef RG_LOG_COLORS
-#define RG_LOG_COLORS (1)
-#endif
-
-#ifndef RG_TICK_RATE
-#ifdef ESP_PLATFORM
-#define RG_TICK_RATE CONFIG_FREERTOS_HZ
-#else
-#define RG_TICK_RATE 1000
-#endif
-#endif
-
-#ifndef RG_ZIP_SUPPORT
-#define RG_ZIP_SUPPORT 1
-#endif
-
-#ifndef RG_SCREEN_PARTIAL_UPDATES
-#define RG_SCREEN_PARTIAL_UPDATES 1
-#endif
-
-#ifndef RG_SCREEN_SAFE_AREA
-#define RG_SCREEN_SAFE_AREA {0, 0, 0, 0}
-#endif
-
-#ifndef RG_SCREEN_VISIBLE_AREA
-#define RG_SCREEN_VISIBLE_AREA {0, 0, 0, 0}
-#endif
-
-#ifndef RG_LANG_DEFAULT
-#define RG_LANG_DEFAULT RG_LANG_EN
-#endif
-
-#ifndef RG_FONT_DEFAULT
-#define RG_FONT_DEFAULT RG_FONT_VERA_11
-#endif
+#define CONFIG_HW_BTN_MENU              -1 
+#define CONFIG_HW_BTN_VOLUME            -1
